@@ -1,6 +1,7 @@
 import pandas
 import numpy
 from database.database import Database
+from database.data_manager import DataManager
 
 class DataConverter:
     def __init__(self, filename):
@@ -15,10 +16,17 @@ class DataConverter:
         exc_weather = pandas.read_excel(self.filename, sheet_name='weather', usecols=weather_cols)
 
         exc_weather['Local time'] = pandas.to_datetime(exc_weather['Local time'])
+        exc_weather[exc_weather['T']==""] = numpy.NaN
+        exc_weather[exc_weather['Po']==""] = numpy.NaN
+        exc_weather[exc_weather['P']==""] = numpy.NaN
         exc_weather[exc_weather['Pa']==""] = numpy.NaN
         exc_weather[exc_weather['U']==""] = numpy.NaN
         exc_weather[exc_weather['Ff']==""] = numpy.NaN
-        exc_weather.fillna(method='ffill', inplace=True)
+        #exc_weather.fillna(method='ffill', inplace=True)
+
+        interpolation_collumns = ["T", "Po", "P", "Pa", "U", "Ff"]
+        exc_weather[interpolation_collumns] = exc_weather[interpolation_collumns].astype(float).apply(lambda x: x.interpolate(method='linear'))
+        
 
         weather_data = exc_weather
 
@@ -31,58 +39,26 @@ class DataConverter:
         exc_load['DateShort'] = pandas.to_datetime(exc_load['DateShort'])
         del exc_load['TimeFrom']
         del exc_load['TimeTo']
-        #exc_load[exc_load['Load (MW/h)']==""] = numpy.NaN
-        #exc_load.fillna(method='ffill', inplace=True)
+        exc_load.rename(columns={'Load (MW/h)':'load'}, inplace=True)
+        exc_load.rename(columns={'DateShort':'Local time'}, inplace=True)
 
         load_data = exc_load
 
 
-        return [weather_data, load_data]
+
+        # --------------------------- MEARGED COLLECTIONS --------------------------- #
+
+        measures = pandas.merge(exc_weather, exc_load, on='Local time', how='inner')
+        #df['date'] = pd.to_datetime(df['date'])    
+        #df['date_delta'] = (df['date'] - df['date'].min())  / np.timedelta64(1,'D')
+        measures['Local time'] = pandas.to_datetime(measures['Local time'])
+        measures['Local time'] = (measures['Local time'] - measures['Local time'].min())  / numpy.timedelta64(1,'D')
+
+        measures.to_csv('measures.csv', index=False)
+
+        return measures
         
-        # ----------------------------- DATABASE ----------------------------- #
+        # --------------------------------------------------------------------------- #
 
-        database = Database()
 
-        context = database.get_bigdata_db_context()
-
-        weather_set = context.weather
-        load_set = context.load
-
-        
-
-        try:
-            if weather_set.count_documents({}) == 0:
-                result = weather_set.insert_many(exc_weather.to_dict('records'), ordered=True)
-            else:
-                if weather_set.count_documents({}) != len(exc_weather.index):
-                    weather_set.delete_many({})
-                    result = weather_set.insert_many(exc_weather.to_dict('records'), ordered=True)
-        except:
-            print("Error ocured while writing to database (WEATHER)")
-
-        try:
-            if load_set.count_documents({}) == 0:
-                result = load_set.insert_many(exc_load.to_dict('records'), ordered=True)
-            else:
-                if load_set.count_documents({}) != len(exc_load.index):
-                    load_set.delete_many({})
-                    result = load_set.insert_many(exc_load.to_dict('records'), ordered=True)
-        except:
-            print("Error ocured while writing to database (LOAD)")
-
-        
-        print("WEATHER SET: ", weather_set.count_documents({}))
-        print("LOAD SET: ", load_set.count_documents({}))
-        print("WEATHER EXCEL: ", len(exc_weather.index))
-        print("LOAD EXCEL: ", len(exc_load.index))
-        exc_weather.to_csv("weather.csv", index = None, header = True)
-        exc_load.to_csv("load.csv", index=None, header=True)
-
-    def write_data(self):
-        database = Database()
-        print(database.client)
-        print(database.connectionString)
-        db = database.get_bigdata_db_context()
-        weather = db.weather
-       # result = weather.insert_one() # upis
         

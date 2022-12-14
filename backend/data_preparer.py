@@ -1,14 +1,29 @@
 import numpy
+import pandas
+from database.data_manager import DataManager
 from sklearn.preprocessing import MinMaxScaler
 
+SHARE_FOR_TRAINING = 0.85
+
 class DataPreparer:
-    def __init__(self, dataframe, number_of_columns, share_for_training):
+    def __init__(self):
         self.scaler = MinMaxScaler(feature_range=(0, 1))
+        dataframe = self.load_data_from_database()
+        #self.datasetOrig = self.datasetOrig.astype('float32')
+        self.number_of_columns = len(dataframe.columns)
         self.datasetOrig = dataframe.values
         self.datasetOrig = self.datasetOrig.astype('float32')
-        self.number_of_columns = number_of_columns
         self.predictor_column_no = self.number_of_columns - 1
-        self.share_for_training = share_for_training
+        self.share_for_training = SHARE_FOR_TRAINING
+
+    def load_data_from_database(self):
+        data_manager = DataManager()
+        data = data_manager.get_measure_data()
+        data_list = list(data)
+        dataframe = pandas.DataFrame(data_list)
+        del dataframe['_id']
+        #del dataframe['Local time']
+        return dataframe
 
     
     def prepare_for_training(self):
