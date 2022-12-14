@@ -28,6 +28,8 @@ class DataPreparer:
     
     def prepare_for_training(self):
         dataset = self.scaler.fit_transform(self.datasetOrig)                       #skaliranje
+        print(dataset.max(axis=0)) # will return max value of each column
+        print(dataset.min(axis=0))
         train_size = int(len(dataset) * self.share_for_training)                    #velicina podataka za trening
         test_size = len(dataset) - train_size                                       #velicina za test
         train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]   # definicija setova za trening i test

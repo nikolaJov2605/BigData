@@ -31,8 +31,6 @@ class MainWindow(QDialog):
             return
         
         filename = "data/" + self.filename.text()#.split('/')[-1]
-        print("Filename: ", filename)
-        print("\nLoading and converting data...")
         data_converter = DataConverter(filename)
         ret_data = data_converter.load_data()       # ret_data[0] = weather; ret_data[1] = load
         print("\nDone.")
@@ -45,7 +43,6 @@ class MainWindow(QDialog):
         data_preparer = DataPreparer()
         trainX, trainY, testX, testY = data_preparer.prepare_for_training()
         print("\nDone.")
-
         print("Doing some learning...")
         ann_regression = AnnRegression()
         time_begin = time.time()
