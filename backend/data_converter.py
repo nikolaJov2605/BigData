@@ -61,7 +61,7 @@ class DataConverter:
         ###measures['dayType'] = date['dayType']
         #df.insert(0, 'mean', df.pop('mean'))
         measures.insert(0, 'dayType', date['dayType'])
-        measures.insert(1, 'month', date['month'])
+        #measures.insert(1, 'month', date['month'])
         del measures['Local time']
         #df['date'] = pd.to_datetime(df['date'])
         #df['date_delta'] = (df['date'] - df['date'].min())  / np.timedelta64(1,'D')
