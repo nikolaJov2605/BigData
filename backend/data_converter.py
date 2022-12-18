@@ -12,7 +12,7 @@ class DataConverter:
         # ----------------------------- WEATHER COLLECTION ----------------------------- #
 
         #weather_cols = ["Local time", "T", "Po", "P", "Pa", "U", "DD", "Ff", "N", "WW", "W1", "W2"]
-        weather_cols = ["Local time", "T", "Po", "P", "Pa", "U", "Ff"]
+        weather_cols = ["Local time", "T", "Po", "P", "Pa", "U", "Ff", "N"]
         exc_weather = pandas.read_excel(self.filename, sheet_name='weather', usecols=weather_cols)
 
         exc_weather['Local time'] = pandas.to_datetime(exc_weather['Local time'], dayfirst=True)
@@ -23,16 +23,27 @@ class DataConverter:
         exc_weather[exc_weather['Pa']==""] = numpy.NaN
         exc_weather[exc_weather['U']==""] = numpy.NaN
         exc_weather[exc_weather['Ff']==""] = numpy.NaN
+        exc_weather[exc_weather['N']==""] = numpy.NaN
         #exc_weather.fillna(method='ffill', inplace=True)
+        exc_weather['N'].fillna(method='ffill', inplace=True)
+        exc_weather['N'].fillna(method='bfill', inplace=True)
+
+        exc_weather['N'] = numpy.where(exc_weather['N'].str.contains('–'), exc_weather['N'].str.replace('–', ' ', regex=False) , exc_weather['N'])
+        exc_weather["N"] = exc_weather['N'].str.split(pat=' ', n=-1, expand=True)[0]
+        exc_weather['N'] = numpy.where(exc_weather['N']=='no', '0', exc_weather['N'])
+        exc_weather['N'] = numpy.where(exc_weather['N'].str.contains('%'), exc_weather['N'].str.replace('%', '', regex=False) , exc_weather['N'])
+        exc_weather['N'] = numpy.where(exc_weather['N'].str.contains('.'), exc_weather['N'].str.replace('.', '', regex=False) , exc_weather['N'])
+        exc_weather['N'] = numpy.where(exc_weather['N'].str.contains('Sky'), exc_weather['N'].str.replace('Sky', '100', regex=False) , exc_weather['N'])
+        exc_weather['N'] = exc_weather['N'].astype('float') / 100
+        #exc_weather['N'] = exc_weather['N'].str.split(pat='%', n=-1, expand=True)[0]
+        #exc_weather[exc_weather['N'].str.contains("–")] = exc_weather['N'].str.split(pat='–', n=-1, expand=True)[0]
 
         interpolation_collumns = ["T", "Po", "P", "Pa", "U", "Ff"]
         exc_weather[interpolation_collumns] = exc_weather[interpolation_collumns].astype(float).apply(lambda x: x.interpolate(method='linear'))
 
         #exc_weather['last_day_average_temperature']
-        
 
-       # weather_data = exc_weather
-       # exc_weather.to_csv('weather.csv', index=False)
+        exc_weather.to_csv('weather.csv', index=False)
 
 
         # ----------------------------- LOAD COLLECTION ----------------------------- #
@@ -46,33 +57,45 @@ class DataConverter:
         exc_load.rename(columns={'Load (MW/h)':'load'}, inplace=True)
         exc_load.rename(columns={'DateShort':'Local time'}, inplace=True)
 
-       # load_data = exc_load
 
         #exc_load.to_csv('load.csv', index=False)
 
 
 
         # --------------------------- MEARGED COLLECTIONS --------------------------- #
-        
+
         measures = pandas.merge(exc_weather, exc_load, on='Local time', how='left')
         date = pandas.DataFrame()
         date['dayType'] = measures['Local time'].dt.day % 7
-        date['month'] = measures['Local time'].dt.month
+        #date['month'] = measures['Local time'].dt.month
+    #    date['date'] = measures['Local time'].dt.date
         ###measures['dayType'] = date['dayType']
         #df.insert(0, 'mean', df.pop('mean'))
         measures.insert(0, 'dayType', date['dayType'])
-        #measures.insert(1, 'month', date['month'])
+        #measures.insert(1, 'date', date['date'])
+
+
+
+
+
+
+        # NAPRAVI NOVI DATAFRAME GRUPA SA DATUMIMA I PROSECNOM POTROSNJOM I URADI MERGE
+        #date['date'] = measures.groupby(['date'])
+        #date['averageLastDayConsumption'] = measures.groupby(['date'])['load'].mean()
+
+
+        #measures['averageLastDayConsumption'] = loads
+
+
+
+
+        #measures.insert(2, 'averageLastDayConsumption', date['averageLastDayConsumption'])
         del measures['Local time']
-        #df['date'] = pd.to_datetime(df['date'])
-        #df['date_delta'] = (df['date'] - df['date'].min())  / np.timedelta64(1,'D')
-       # measures['Local time'] = pandas.to_datetime(measures['Local time'])
-        #measures['Local time'] = (measures['Local time'] - measures['Local time'].min())  / numpy.timedelta64(1,'D')
+
 
         measures.to_csv('measures.csv', index=False)
 
         return measures
-        
+
         # --------------------------------------------------------------------------- #
 
-
-        
