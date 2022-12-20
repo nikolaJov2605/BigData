@@ -3,7 +3,7 @@ import pandas
 from database.data_manager import DataManager
 from sklearn.preprocessing import MinMaxScaler
 
-SHARE_FOR_TRAINING = 0.85
+SHARE_FOR_TRAINING = 0.95
 
 class DataPreparer:
     def __init__(self):

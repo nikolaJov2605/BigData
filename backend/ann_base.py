@@ -1,15 +1,15 @@
 from re import VERBOSE
 
 
-EPOCH_NUMBER = 100      # broj iteracija | bilo je 100
+EPOCH_NUMBER = 150      # broj iteracija | bilo je 100
 BATCH_SIZE_NUMBER = 1   # broj paketa
 COST_FUNCTION = 'mean_squared_error'
 OPTIMIZER = 'adam'
 KERNEL_INITIALIZER = 'normal'
 ACTIVATION_FUNCTION = 'sigmoid'
-NUMBER_OF_HIDDEN_LAYERS = 2
-NUMBER_OF_NEURONS_IN_FIRST_HIDDEN_LAYER = 4
-NUMBER_OF_NEURONS_IN_OTHER_HIDDEN_LAYERS = 2
+NUMBER_OF_HIDDEN_LAYERS = 2                     # bilo 2
+NUMBER_OF_NEURONS_IN_FIRST_HIDDEN_LAYER = 4     # bilo 4
+NUMBER_OF_NEURONS_IN_OTHER_HIDDEN_LAYERS = 2    # bilo 2
 VERBOSE = 2
 
 class AnnBase:  # neuronska mreza

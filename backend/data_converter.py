@@ -38,7 +38,9 @@ class DataConverter:
         #exc_weather['N'] = exc_weather['N'].str.split(pat='%', n=-1, expand=True)[0]
         #exc_weather[exc_weather['N'].str.contains("–")] = exc_weather['N'].str.split(pat='–', n=-1, expand=True)[0]
 
-        interpolation_collumns = ["T", "Po", "P", "Pa", "U", "Ff"]
+        
+
+        interpolation_collumns = ["T", "Po", "P", "Pa", "U", "Ff", "N"]
         exc_weather[interpolation_collumns] = exc_weather[interpolation_collumns].astype(float).apply(lambda x: x.interpolate(method='linear'))
 
         #exc_weather['last_day_average_temperature']
@@ -72,6 +74,7 @@ class DataConverter:
         ###measures['dayType'] = date['dayType']
         #df.insert(0, 'mean', df.pop('mean'))
         measures.insert(0, 'dayType', date['dayType'])
+        #measures.insert(1, 'month', date['month'])
         #measures.insert(1, 'date', date['date'])
 
 

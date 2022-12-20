@@ -32,7 +32,7 @@ class MainWindow(QDialog):
         
         filename = "data/" + self.filename.text()#.split('/')[-1]
         data_converter = DataConverter(filename)
-        ret_data = data_converter.load_data()       # ret_data[0] = weather; ret_data[1] = load
+        ret_data = data_converter.load_data()
         print("\nDone.")
         print("\nWriting to database...")
         data_writer = DataWriter(ret_data)
