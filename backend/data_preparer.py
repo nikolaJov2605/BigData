@@ -25,7 +25,7 @@ class DataPreparer:
         #del dataframe['Local time']
         return dataframe
 
-    
+
     def prepare_for_training(self):
         dataset = self.scaler.fit_transform(self.datasetOrig)                       #skaliranje
         print(dataset.max(axis=0)) # will return max value of each column

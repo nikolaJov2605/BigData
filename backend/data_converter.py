@@ -69,12 +69,12 @@ class DataConverter:
         measures = pandas.merge(exc_weather, exc_load, on='Local time', how='left')
         date = pandas.DataFrame()
         date['dayType'] = measures['Local time'].dt.day % 7
-        #date['month'] = measures['Local time'].dt.month
+        date['month'] = measures['Local time'].dt.month
     #    date['date'] = measures['Local time'].dt.date
         ###measures['dayType'] = date['dayType']
         #df.insert(0, 'mean', df.pop('mean'))
         measures.insert(0, 'dayType', date['dayType'])
-        #measures.insert(1, 'month', date['month'])
+        measures.insert(1, 'month', date['month'])
         #measures.insert(1, 'date', date['date'])
 
 
