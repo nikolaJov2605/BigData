@@ -8,7 +8,7 @@ class DataConverter:
         self.filename = filename
 
 
-    def load_data(self):
+    def load_and_convert_data(self):
         # ----------------------------- WEATHER COLLECTION ----------------------------- #
 
         #weather_cols = ["Local time", "T", "Po", "P", "Pa", "U", "DD", "Ff", "N", "WW", "W1", "W2"]
@@ -45,7 +45,7 @@ class DataConverter:
 
         #exc_weather['last_day_average_temperature']
 
-        exc_weather.to_csv('weather.csv', index=False)
+        #exc_weather.to_csv('weather.csv', index=False)
 
 
         # ----------------------------- LOAD COLLECTION ----------------------------- #

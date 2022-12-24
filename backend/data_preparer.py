@@ -3,7 +3,7 @@ import pandas
 from database.data_manager import DataManager
 from sklearn.preprocessing import MinMaxScaler
 
-SHARE_FOR_TRAINING = 0.95
+SHARE_FOR_TRAINING = 0.85
 
 class DataPreparer:
     def __init__(self):
@@ -33,7 +33,7 @@ class DataPreparer:
         train_size = int(len(dataset) * self.share_for_training)                    #velicina podataka za trening
         test_size = len(dataset) - train_size                                       #velicina za test
         train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]   # definicija setova za trening i test
-        print(len(train), len(test))        
+        print(len(train), len(test))
         look_back = self.number_of_columns
         trainX, trainY = self.create_dataset(train, look_back)              # podela na zavisne i nezavisne podatke
         testX, testY = self.create_dataset(test, look_back)

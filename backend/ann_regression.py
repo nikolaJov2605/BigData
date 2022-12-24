@@ -3,7 +3,7 @@ from keras.models import Sequential
 from tensorflow import keras
 from backend.ann_base import AnnBase
 
-MODEL_NAME = 'current_model_with_month_100'
+MODEL_NAME = 'current_model_with_month_100_85pc_sl'
 class AnnRegression(AnnBase):
     def get_model(self):
         model = Sequential()
