@@ -3,7 +3,7 @@ from keras.models import Sequential
 from tensorflow import keras
 from backend.ann_base import AnnBase
 
-MODEL_NAME = 'current_model_dj100_time_of_the_year'
+MODEL_NAME = 'current_model'
 class AnnRegression(AnnBase):
     def get_model(self):
         model = Sequential()
@@ -36,8 +36,10 @@ class AnnRegression(AnnBase):
         testPredict = self.model.predict(testX)
         return trainPredict, testPredict
 
-    def compile_fit_predict(self, trainX, trainY, testX):
-        #self.compile_and_fit(trainX, trainY)
-        self.use_current_model(MODEL_NAME, trainX)     #ucitavanje modela
+    def compile_fit_predict(self, trainX, trainY, testX, loaded_model_name):
+        if loaded_model_name != '':
+            self.use_current_model(loaded_model_name, trainX)     #ucitavanje modela
+        else:
+            self.compile_and_fit(trainX, trainY)
         return self.get_predict(testX)
 

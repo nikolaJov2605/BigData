@@ -18,10 +18,12 @@ from front.stream import Stream
 
 class MainWindow(QDialog):
     file = None
+    loaded_model_name = None
     def __init__(self):
         super(MainWindow, self).__init__()
         loadUi("front/main_view.ui", self)
         self.browse_btn.clicked.connect(self.browse_files)
+        self.browse_btn_2.clicked.connect(self.browse_model)
         self.convert_data_btn.clicked.connect(self.load_to_database_thread)
         self.start_ann_btn.clicked.connect(self.start_ann_thread)
 
@@ -58,6 +60,19 @@ class MainWindow(QDialog):
         self.filename.setText(self.file[0].split('/')[-1])
         if self.file is not None:
             self.convert_data_btn.setEnabled(True)
+            self.loaded_model_name = None
+            self.model_select.setText('')
+
+    def browse_model(self):
+        #_OutputFolder = QFileDialog::getExistingDirectory(0, ("Select Output Folder"), QDir::currentPath());
+        self.loaded_model_name = QFileDialog.getExistingDirectory(self, 'Select model', '')
+        name = self.loaded_model_name.split('/')[-1]
+        self.model_select.setText(name)
+        self.loaded_model_name = name
+        if self.loaded_model_name is not None:
+            self.start_ann_btn.setEnabled(True)
+            self.file = None
+            self.filename.setText('')
 
     def load_to_database(self):
         if self.file is None:
@@ -82,6 +97,12 @@ class MainWindow(QDialog):
             self.start_ann_btn.setEnabled(True)
 
     def start_ann(self):
+        model_loaded = False
+        if self.loaded_model_name is not None:
+            model_loaded = True
+        else:
+            self.loaded_model_name = ''
+
         print("\nPreparing data...")
         data_preparer = DataPreparer()
         trainX, trainY, testX, testY = data_preparer.prepare_for_training()
@@ -89,7 +110,7 @@ class MainWindow(QDialog):
         print("Doing some learning...")
         ann_regression = AnnRegression()
         time_begin = time.time()
-        trainPredict, testPredict = ann_regression.compile_fit_predict(trainX, trainY, testX)
+        trainPredict, testPredict = ann_regression.compile_fit_predict(trainX, trainY, testX, self.loaded_model_name)
         time_end = time.time()
         print('Training duration: %.2f seconds' % (time_end - time_begin))
 

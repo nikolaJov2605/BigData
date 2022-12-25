@@ -19,7 +19,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>319</x>
+     <x>320</x>
      <y>420</y>
      <width>181</width>
      <height>25</height>
@@ -77,7 +77,7 @@
      <x>10</x>
      <y>410</y>
      <width>291</width>
-     <height>51</height>
+     <height>65</height>
     </rect>
    </property>
    <property name="title">
@@ -86,8 +86,8 @@
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>20</y>
+      <x>20</x>
+      <y>30</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -514,8 +514,8 @@
    <widget class="QWidget" name="widget_2" native="true">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>20</y>
+      <x>150</x>
+      <y>30</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -942,8 +942,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>20</y>
+      <x>40</x>
+      <y>30</y>
       <width>55</width>
       <height>16</height>
      </rect>
@@ -955,8 +955,8 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>20</y>
+      <x>170</x>
+      <y>30</y>
       <width>55</width>
       <height>16</height>
      </rect>
@@ -986,10 +986,42 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>470</y>
+     <y>490</y>
      <width>621</width>
      <height>101</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="model_select">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>450</y>
+     <width>181</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load your model...</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="browse_btn_2">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>450</y>
+     <width>121</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Browse</string>
    </property>
   </widget>
  </widget>
